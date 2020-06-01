@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib import admin
 from django.urls import reverse
 import uuid
 
@@ -9,6 +10,7 @@ class Genre(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return self.name
+
 
 class Book(models.Model):
     """Model representing a book (but not a specific copy of a book)."""
@@ -32,6 +34,10 @@ class Book(models.Model):
     def get_absolute_url(self):
         """Returns the url to access a detail record for this book."""
         return reverse('book-detail', args=[str(self.id)])
+    def display_genre(self):
+        """Create a string for the Genre. This is required to display genre in Admin."""
+        return ', '.join(genre.name for genre in self.genre.all()[:3])
+    display_genre.short_description = 'Genre'
 
 class BookInstance(models.Model):
     """Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
@@ -80,3 +86,6 @@ class Author(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.last_name}, {self.first_name}'
+
+
+
